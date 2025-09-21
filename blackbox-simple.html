@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Operation: BLACKBOX</title>
+  <meta name="color-scheme" content="dark" />
+  <style>
+    :root{
+      --bg:#000;
+      --panel:#0b0b0b;
+      --panel2:#0f0f0f;
+      --ink:#e5e5e5;
+      --muted:#a3a3a3;
+      --line:#1f1f1f;
+      --accent:#a3ff66;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--mono);line-height:1.55}
+    .scanlines{
+      position:fixed;inset:0;pointer-events:none;opacity:.06;
+      background-image:repeating-linear-gradient(0deg, rgba(255,255,255,.35) 0, rgba(255,255,255,.35) 1px, transparent 1px, transparent 3px);
+      z-index:0;
+    }
+    .noise{
+      position:fixed;inset:0;pointer-events:none;mix-blend-mode:overlay;opacity:.05;z-index:0;
+      background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/200/svg" width="160" height="160" viewBox="0 0 160 160"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.7"/></svg>');
+    }
+    header{
+      position:sticky;top:0;z-index:10;
+      background:linear-gradient(180deg, rgba(12,12,12,.95), rgba(0,0,0,.95));
+      border-bottom:1px solid var(--line);
+      backdrop-filter:saturate(110%) blur(4px);
+    }
+    .wrap{max-width:1200px;margin:0 auto;padding:42px 24px}
+    h1{margin:0;font-size:clamp(28px,4vw,48px);letter-spacing:.5px}
+    .pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+    .pill{border:1px solid #2a2a2a;background:#0e0e0e;padding:6px 10px;border-radius:999px;font-size:12px;color:#d4d4d4}
+    .bar{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+    .btn{border:1px solid var(--line);background:var(--panel);padding:8px 12px;border-radius:12px;color:var(--ink);font-size:13px;cursor:pointer}
+    .btn:hover{background:#111}
+    main{display:grid;grid-template-columns:1fr;gap:24px;padding:28px 24px;max-width:1200px;margin:0 auto}
+    @media (min-width: 1100px){
+      main{grid-template-columns:280px 1fr}
+    }
+    nav{position:sticky;top:96px;align-self:start;border:1px solid var(--line);background:rgba(10,10,10,.7);border-radius:16px;padding:14px}
+    nav .t{font-size:11px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);margin-bottom:8px}
+    nav button{display:flex;gap:8px;align-items:center;width:100%;text-align:left;border:0;background:transparent;color:var(--ink);padding:8px;border-radius:8px;cursor:pointer}
+    nav button:hover{background:#0f0f0f}
+    .section{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),var(--panel2));border-radius:18px;overflow:hidden}
+    .sec-head{display:flex;gap:10px;align-items:center;padding:16px 18px;cursor:pointer;background:rgba(255,255,255,0.02)}
+    .sec-head:hover{background:rgba(255,255,255,0.04)}
+    .chev{transition:transform .25s ease}
+    .open .chev{transform:rotate(90deg)}
+    .sec-body{padding:0 18px 18px 18px;display:none}
+    .open .sec-body{display:block;animation:reveal .25s ease}
+    @keyframes reveal{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    ul,ol{padding-left:22px}
+    .divider{height:1px;background:linear-gradient(90deg, transparent, #2a2a2a, transparent);margin:14px 0}
+    footer{border-top:1px solid var(--line);background:#000}
+    footer .wrap{padding:18px 24px;font-size:12px;color:#9a9a9a}
+    a{color:#c6ffd7;text-decoration:none}
+    a:hover{text-decoration:underline}
+    @media print{
+      header, nav, .scanlines, .noise, .bar{display:none!important}
+      main{grid-template-columns:1fr;padding:0}
+      .section{break-inside:avoid}
+    }
+  </style>
+</head>
+<body>
+  <div class="scanlines"></div>
+  <div class="noise"></div>
+
+  <header>
+    <div class="wrap">
+      <h1>Operation: BLACKBOX</h1>
+      <div class="pills">
+        <span class="pill">Dark Protocol</span>
+        <span class="pill">Legality First</span>
+        <span class="pill">Case Rigor</span>
+        <span class="pill">Recruitment by Cipher</span>
+      </div>
+      <div class="bar">
+        <button class="btn" onclick="window.print()">Export / Print</button>
+        <button class="btn" data-jump="purpose">Jump to Purpose</button>
+        <button class="btn" data-jump="roles">Jump to Roles</button>
+        <button class="btn" data-jump="workflow">Jump to Workflow</button>
+        <button class="btn" data-jump="recruitment">Jump to Recruitment</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <nav>
+      <div class="t">Index</div>
+      <div id="toc"></div>
+    </nav>
+
+    <div id="content">
+      <!-- Sections -->
+      <section id="purpose" class="section open" data-title="Purpose">
+        <div class="sec-head" onclick="toggleSection(this)">
+          <span class="chev">▶</span><strong>Purpose</strong>
+        </div>
+        <div class="sec-body">
+          <p>Our mission is to legally investigate and observe online crimes, with emphasis on protecting children and animals. We do not intervene. We collect, verify, and compile evidence into structured case files for formal review and archival.</p>
+          <div class="divider"></div>
+          <p>Current structure carries roleplay residue. To ensure sustainability and credibility, we propose a rework of roles, workflow, and recruitment to form a professional but simple investigative system.</p>
+        </div>
+      </section>
+
+      <section id="roles" class="section open" data-title="Role Structure (Simplified & Realistic)">
+        <div class="sec-head" onclick="toggleSection(this)">
+          <span class="chev">▶</span><strong>Role Structure (Simplified & Realistic)</strong>
+        </div>
+        <div class="sec-body">
+          <div class="section" style="margin:12px 0">
+            <div class="sec-head" onclick="toggleSection(this)">
+              <span class="chev">▶</span><strong>Oversight & Leadership</strong>
+            </div>
+            <div class="sec-body">
+              <ul>
+                <li><strong>Director of Operations</strong> — Final authority, approves or rejects completed case files.</li>
+                <li><strong>Oversight Committee</strong> — Supports the Director in reviewing and ensuring legality and standards.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="section" style="margin:12px 0">
+            <div class="sec-head" onclick="toggleSection(this)">
+              <span class="chev">▶</span><strong>Case Roles</strong>
+            </div>
+            <div class="sec-body">
+              <ul>
+                <li><strong>Case Manager</strong> — Leads one case. Manages a team of 5–7 investigators.</li>
+                <li><strong>Senior Investigator</strong> — Mentors new recruits.</li>
+                <li><strong>Investigator</strong> — Collects and submits evidence (screenshots, IDs, context).</li>
+                <li><strong>Analyst</strong> — Organizes and formats evidence; supports the Case Manager.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="section" style="margin:12px 0">
+            <div class="sec-head" onclick="toggleSection(this)">
+              <span class="chev">▶</span><strong>Support & Specialists</strong>
+            </div>
+            <div class="sec-body">
+              <ul>
+                <li><strong>Recruitment Officer</strong> — Runs entry challenges and onboarding.</li>
+                <li><strong>Technical Specialist</strong> — Provides OSINT, metadata, and technical support.</li>
+                <li><strong>Archivist</strong> — Maintains case file archives.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="workflow" class="section open" data-title="Case Workflow">
+        <div class="sec-head" onclick="toggleSection(this)">
+          <span class="chev">▶</span><strong>Case Workflow</strong>
+        </div>
+        <div class="sec-body">
+          <ol>
+            <li><strong>Case Assignment</strong> — Oversight assigns a Case Manager, who forms a small team.</li>
+            <li><strong>Evidence Collection</strong> — Investigators collect:
+              <ul>
+                <li>Screenshots</li>
+                <li>User/Message IDs, channel references</li>
+                <li>Context/description for each piece</li>
+              </ul>
+            </li>
+            <li><strong>Compilation</strong> — Case Manager reviews and builds a Case File using a clear format.</li>
+            <li><strong>Approval</strong> — Case File submitted to Director → approved (archived) or denied (returned for edits).</li>
+          </ol>
+        </div>
+      </section>
+
+      <section id="template" class="section open" data-title="Case File Format (Consistent Template)">
+        <div class="sec-head" onclick="toggleSection(this)">
+          <span class="chev">▶</span><strong>Case File Format (Consistent Template)</strong>
+        </div>
+        <div class="sec-body">
+          <ol>
+            <li>Case ID / Name</li>
+            <li>Case Manager</li>
+            <li>Investigators Assigned</li>
+            <li>Summary of Case (short description)</li>
+            <li>Evidence Log
+              <ul>
+                <li>Item (screenshot / file / link)</li>
+                <li>Source (channel ID, user ID, message ID)</li>
+                <li>Context (why relevant)</li>
+                <li>Notes</li>
+              </ul>
+            </li>
+            <li>Conclusion / Recommendation</li>
+            <li>Approval Status (signed by Director)</li>
+          </ol>
+          <div class="divider"></div>
+          <p style="color:var(--muted);font-size:13px">Tip: enforce this template with a form (Notion/Docs) so submissions are uniform.</p>
+        </div>
+      </section>
+
+      <section id="recruitment" class="section open" data-title="Recruitment Process (Cicada‑Style)">
+        <div class="sec-head" onclick="toggleSection(this)">
+          <span class="chev">▶</span><strong>Recruitment Process (Cicada‑Style)</strong>
+        </div>
+        <div class="sec-body">
+          <p>Entry is by skill, not request. Challenges mirror required competencies:</p>
+          <ul>
+            <li>Logic & analysis (riddles, problem solving)</li>
+            <li>Research skills (finding hidden info online)</li>
+            <li>Attention to detail (steganography / hidden messages)</li>
+            <li>Technical skills (basic encryption/decryption, metadata analysis)</li>
+          </ul>
+          <p>After completion, recruits select a path: Investigator, Case Manager trainee, or Specialist. Each path has a proficiency exam.</p>
+        </div>
+      </section>
+
+      <section id="benefits" class="section open" data-title="Benefits of This Rework">
+        <div class="sec-head" onclick="toggleSection(this)">
+          <span class="chev">▶</span><strong>Benefits of This Rework</strong>
+        </div>
+        <div class="sec-body">
+          <ul>
+            <li><strong>Professional</strong> — Removes gamey roleplay feel; replaces with serious investigative structure.</li>
+            <li><strong>Simple</strong> — Clear workflow that scales without bloat.</li>
+            <li><strong>Consistent</strong> — Every case documented under the same template.</li>
+            <li><strong>Exclusive</strong> — Recruitment by puzzles signals rigor and intent.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="archive" class="section open" data-title="Archive Protocol">
+        <div class="sec-head" onclick="toggleSection(this)">
+          <span class="chev">▶</span><strong>Archive Protocol</strong>
+        </div>
+        <div class="sec-body">
+          <ol>
+            <li>Approved case files receive a unique immutable Case ID.</li>
+            <li>Redacted public summary may be produced (optional, oversight‑approved).</li>
+            <li>All source artifacts stored in read‑only archive with checksum notes.</li>
+            <li>Access controlled by Archivist; audit log retained.</li>
+          </ol>
+        </div>
+      </section>
+
+      <section id="closing" class="section open" data-title="Closing Note">
+        <div class="sec-head" onclick="toggleSection(this)">
+          <span class="chev">▶</span><strong>Closing Note</strong>
+        </div>
+        <div class="sec-body">
+          <p>Designed to humanize process without diluting seriousness. Simple, clear, legal. Focus remains on protection through disciplined observation and documentation.</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">Operation: BLACKBOX — structure rework v1.0 — print for internal circulation only.</div>
+  </footer>
+
+  <script>
+    // Smooth jump buttons
+    document.querySelectorAll('[data-jump]').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const id = btn.getAttribute('data-jump');
+        const el = document.getElementById(id);
+        if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+      });
+    });
+    // Collapsible logic
+    function toggleSection(head){
+      const sec = head.closest('.section');
+      sec.classList.toggle('open');
+    }
+    // Build sidebar TOC
+    const toc = document.getElementById('toc');
+    document.querySelectorAll('#content > section').forEach(sec=>{
+      const id = sec.id; const title = sec.dataset.title || id;
+      const b = document.createElement('button');
+      b.textContent = title;
+      b.addEventListener('click', ()=>{
+        document.getElementById(id).scrollIntoView({behavior:'smooth', block:'start'});
+      });
+      toc.appendChild(b);
+    });
+  </script>
+</body>
+</html>
